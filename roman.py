@@ -1,31 +1,53 @@
 from datetime import datetime, time, timedelta
 import sys
 
+
 HOURS = 'I II III IV V VI VII VIII IX X XI XII'.split()
 
-def main():
-    start = (5, 29)
-    end = (23, 21)
+def make(start, end, now=None):
+    assert start < end
+    if not now:
+        now = datetime.now()
 
     rise = datetime.combine(datetime.today(), time(*start))
     sets = datetime.combine(datetime.today(), time(*end))
-    now = datetime.now()
-    diff = sets - rise
+    day = timedelta(days=1)
+    
+    if now < rise:
+        return Night(sets - day, rise)
+    if sets < now:
+        return Night(sets, rise + day)
+    return Day(rise, sets)
 
-    if rise < now < sets:
-        scale = 12 * 3600 * (now - rise).seconds / diff.seconds
-        print "Current time: ", timedelta(seconds=scale)
+class Semi(object):
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
         
+    def t(self, localtime):
+        assert self.start < localtime < self.end
+        full = self.end - self.start
+        elapsed = localtime - self.start
 
-    print "Sunrise at %d:%d" % start
-    for k in range(12):
-        hour_starts = rise + k * diff // 12
-        hour_ends = rise + (k + 1) * diff // 12
-        print HOURS[k],
-        if hour_starts < now < hour_ends:
-            print '**',
+        seconds = 12 * 3600 * elapsed.seconds / full.seconds
+        hour, rem = divmod(seconds, 3600)
+        return HOURS[hour], rem/60.
 
-        print "\t ends at %02d:%02d" % (hour_ends.hour, hour_ends.minute)
+class Day(Semi):
+    name = "Day"
+
+class Night(Semi):
+    name = "Night"
+
+def main():
+    start = (5, 29)
+    end = (21, 21)
+
+    semi = make(start, end)
+    now = datetime.now()
+
+    hour, minute = semi.t(now)
+    print semi.name, hour, "(%d minutes into)" % minute
         
 
 if __name__ == '__main__':
