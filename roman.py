@@ -40,14 +40,21 @@ class Night(Semi):
     name = "Night"
 
 def main():
-    start = (5, 29)
-    end = (21, 21)
+    start = (5, 31)
+    end = (21, 18)
 
     semi = make(start, end)
     now = datetime.now()
 
     hour, minute = semi.t(now)
-    print semi.name, hour, "(%d minutes into)" % minute
+    
+    print "%s hour of %s" % (hour, semi.name),
+    if minute < 20:
+        print "(early)"
+    elif minute < 40:
+        print "(halfway)"
+    else:
+        print "(late)"
         
 
 if __name__ == '__main__':
