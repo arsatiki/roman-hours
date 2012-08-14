@@ -47,7 +47,7 @@ def main():
                 continue
             
             sleep_until(stamp)
-            print cycle, text
+            print cycle, text, str(datetime.now())
 
 
 if __name__ == '__main__':
