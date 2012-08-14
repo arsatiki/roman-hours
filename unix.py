@@ -54,7 +54,4 @@ def hourangle(latitude, declination):
     num = degsin(-0.83) - degsin(latitude) * degsin(declination)
     den = degcos(latitude) * degcos(declination)
 
-    if num/den < 0:
-        print "It's night"
-
     return math.acos(num/den)
