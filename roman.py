@@ -1,17 +1,16 @@
 from datetime import datetime, time, timedelta
 import sys
-
+import time
+import unix
 
 HOURS = 'I II III IV V VI VII VIII IX X XI XII'.split()
 
-def make(start, end, now=None):
-    assert start < end
+def make(rise, sets, now=None):
+    assert rise < sets
     if not now:
-        now = datetime.now()
+        now = time.time()
 
-    rise = datetime.combine(datetime.today(), time(*start))
-    sets = datetime.combine(datetime.today(), time(*end))
-    day = timedelta(days=1)
+    day = 24*60*60
     
     if now < rise:
         return Night(sets - day, rise)
@@ -29,9 +28,10 @@ class Semi(object):
         full = self.end - self.start
         elapsed = localtime - self.start
 
-        seconds = 12 * 3600 * elapsed.seconds / full.seconds
-        hour, rem = divmod(seconds, 3600)
-        return HOURS[hour], rem/60.
+        hour = 12.0 * elapsed / full
+        hour_int = int(hour)
+        minutes = (hour - hour_int) * 60
+        return HOURS[hour_int], minutes
 
 class Day(Semi):
     name = "Day"
@@ -40,11 +40,11 @@ class Night(Semi):
     name = "Night"
 
 def main():
-    start = (5, 31)
-    end = (21, 18)
+    start = 1344911607.0963488
+    end = 1344968347.3134711
 
     semi = make(start, end)
-    now = datetime.now()
+    now = time.time()
 
     hour, minute = semi.t(now)
     
