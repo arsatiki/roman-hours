@@ -42,8 +42,6 @@ def main():
     Js = unix.solar_noon(time.time(), unix.LON)
     start, end = map(unix.unix, unix.times(Js, unix.LAT, unix.LON))
 
-    print start, end
-
     semi = make(start, end)
     now = time.time()
 
