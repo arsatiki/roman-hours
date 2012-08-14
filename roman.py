@@ -1,4 +1,3 @@
-from datetime import datetime, time, timedelta
 import sys
 import time
 import unix
@@ -40,8 +39,10 @@ class Night(Semi):
     name = "Night"
 
 def main():
-    start = 1344911607.0963488
-    end = 1344968347.3134711
+    Js = unix.solar_noon(time.time(), unix.LON)
+    start, end = map(unix.unix, unix.times(Js, unix.LAT, unix.LON))
+
+    print start, end
 
     semi = make(start, end)
     now = time.time()
