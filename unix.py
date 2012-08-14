@@ -2,7 +2,7 @@ from datetime import datetime
 import math
 import time
 
-LON_scaled = -24.9375 / 360
+LON = -24.9375
 EPOCH = 2451545.0009
 LAT = 60.1708
 
@@ -18,11 +18,11 @@ def jd(u):
 def unix(JDN):
     return (JDN - 2440587.5) * 86400
 
-def current_cycle():
-    return round(jd(time.time()) - EPOCH - LON_scaled)
+def current_cycle(t_u, longitude):
+    return round(jd(t_u) - EPOCH - longitude/360)
 
-def solar_noon():
-    return EPOCH + current_cycle() + LON_scaled
+def solar_noon(t_u, longitude):
+    return EPOCH + current_cycle(t_u, longitude) + longitude/360
 
 def localtime(jd):
     return datetime.fromtimestamp(unix(jd))
@@ -37,7 +37,7 @@ def ec_long(m):
     
     return (m + 102.9372 + c1+c2+c3 + 180) % 360
 
-def times(Jstar, latitude):
+def times(Jstar, latitude, longitude):
     m = M(Jstar)
     lamb = ec_long(m)
     
