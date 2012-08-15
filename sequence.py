@@ -43,6 +43,9 @@ def sleep_until(stamp):
     time_left = stamp - time.time()
     if time_left > 0:
         time.sleep(time_left)
+    else:
+        print "Just a second..."
+        time.sleep(1)  # A safety precaution.
 
 
 def main():
