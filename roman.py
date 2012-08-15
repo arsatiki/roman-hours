@@ -49,11 +49,11 @@ def main():
     
     print "%s hour of %s" % (hour, semi.name),
     if minute < 20:
-        print "(early)"
+        print "(early)", minute
     elif minute < 40:
-        print "(halfway)"
+        print "(halfway)", minute
     else:
-        print "(late)"
+        print "(late)", minute
         
 
 if __name__ == '__main__':

@@ -21,6 +21,9 @@ def unix(JDN):
 def current_cycle(t_u, longitude):
     return round(jd(t_u) - EPOCH - longitude/360)
 
+def JD_solar_noon(t, longitude):
+    return EPOCH + t + longitude/360
+
 def solar_noon(t_u, longitude):
     return EPOCH + current_cycle(t_u, longitude) + longitude/360
 
