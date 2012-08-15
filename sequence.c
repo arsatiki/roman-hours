@@ -58,6 +58,7 @@ void print_hours(event prev, event next) {
 
 void print_events(event* events, int n_events) {
 	int k = 1;
+	/* I don't understand this code anymore */
 	while (difftime(time(NULL), events[k].stamp) < 0)
 		k++;
 	
