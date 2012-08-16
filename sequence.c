@@ -73,7 +73,7 @@ int generate_events(double lat, double lon, time_t now, event** events) {
 	t = lround(jnow - EXACT_EPOCH - lon / 360);
 		
 	for (k = 0; k < n; k++) {
-		crossings(t + k - 1, lat, lon, &evs[2*k], &evs[2*k+1]);
+		crossings(t - 1 + k, lat, lon, &evs[2*k], &evs[2*k+1]);
 	}
 	
 	*events = evs;
