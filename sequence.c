@@ -58,12 +58,15 @@ void print_hours(event prev, event next) {
 
 void print_events(event* events, int n_events) {
 	int k = 1;
-	/* I don't understand this code anymore */
-	while (difftime(time(NULL), events[k].stamp) < 0)
-		k++;
-	
-	for (; k < n_events; k++)
-		print_hours(events[k-1], events[k]);
+	event prev, next;
+
+	for (k = 1; k < n_events; k++) {
+		prev = events[k-1];
+		next = events[k];
+		if (difftime(next.stamp, time(NULL)) < 0)
+			continue;
+		print_hours(prev, next);
+	}
 }
 
 int main(int argc, char** argv) {
