@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
+#include <math.h>
+
+#define EXACT_EPOCH (2451545.009)
+#define EPOCH (2451545)
+#define TAU (4*acos(0))
 
 enum event_type {
 	SUNRISE,
@@ -12,22 +18,67 @@ typedef struct {
 	enum event_type type;
 } event;
 
+typedef long J2000_days;
+typedef double julian;
+
 /* Fix. */
 event make_event(time_t stamp, enum event_type type) {
 	event e = {stamp, type};
 	return e;
 }
 
+julian from_time_t(time_t t) {
+	return ((double) t) / 86400.0 + 2440587.5;
+}
+
+time_t from_julian(julian jdn) {
+	return (time_t)((jdn - 2440587.5) * 86400);
+    
+}
+
+double dsin(double x) { return sin(360*x/TAU); }
+double dcos(double x) { return cos(360*x/TAU); }
+double arcsin(double x) { return 360 * asin(x) / TAU; }
+double arccos(double x) { return 360 * acos(x) / TAU; }
+
+void crossings(J2000_days t, double lat, double lon, event *rise, event *set) {
+	julian noon, transit;
+	noon = t + EXACT_EPOCH + lon / 360; 
+	
+	double M = fmod(357.5291 + 0.98560023 * (noon - 2451545), 360);
+	double C = 1.9148 * dsin(M) + 0.0200 * dsin(2*M) + 0.0003 * dsin(3*M);
+	double l = fmod(M + 102.9372 + C + 180, 360);
+	
+	transit = noon + 0.0053 * dsin(M) - 0.0069 * sin(2*l);
+	
+	double d = arcsin(dsin(l) * dsin(23.45));
+	double num = dsin(-0.83) - dsin(lat) * dsin(d);
+	double den = dcos(lat) * dcos(d);
+	double w = arccos(num/den);
+
+	*rise = make_event(from_julian(transit - w/360), SUNRISE);
+	*set  = make_event(from_julian(transit + w/360), SUNSET);
+}
+
 
 int generate_events(double lat, double lon, time_t now, event** events) {
 	int n = 20 * 365;
 	int k;
-	(*events) = malloc(sizeof(event) * n);
+	julian jnow;
+	J2000_days t;
+	event* evs;
 
-	for (k = 0; k < n; k++)
-		(*events)[k] = make_event(now + 60 * (k - 5), k % 2);
+	evs = (event*) calloc(2 * n, sizeof(event));	
 
-	return n;
+	jnow = from_time_t(now);
+	t = lround(jnow - EXACT_EPOCH - lon / 360);
+		
+	for (k = 0; k < n; k++) {
+		crossings(t + k - 1, lat, lon, &evs[2*k], &evs[2*k+1]);
+	}
+	
+	*events = evs;
+	return 2*n;
 }
 
 
