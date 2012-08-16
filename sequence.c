@@ -7,6 +7,7 @@
 #define EXACT_EPOCH (2451545.009)
 #define EPOCH (2451545)
 #define TAU (4*acos(0))
+#define HOURS (12)
 
 enum event_type {
 	SUNRISE,
@@ -96,11 +97,11 @@ void sleep_until(time_t t) {
 
 void print_hours(event prev, event next) {
 	int hour;
-	double hourlen = difftime(next.stamp, prev.stamp) / 12;
+	double hourlen = difftime(next.stamp, prev.stamp) / HOURS;
 	char* type = (prev.type == SUNRISE)? "day": "night";
 	time_t stamp;
 	
-	for (hour = 0; hour < 12; hour++) {
+	for (hour = 0; hour < HOURS; hour++) {
 		stamp = prev.stamp + (time_t)(hour * hourlen);
 		if (is_old(stamp))
 			continue;
