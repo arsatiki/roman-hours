@@ -33,11 +33,10 @@ julian from_time_t(time_t t) {
 
 time_t from_julian(julian jdn) {
 	return (time_t)((jdn - 2440587.5) * 86400);
-    
 }
 
-double dsin(double x) { return sin(360*x/TAU); }
-double dcos(double x) { return cos(360*x/TAU); }
+double dsin(double x) { return sin(TAU*x/360); }
+double dcos(double x) { return cos(TAU*x/360); }
 double arcsin(double x) { return 360 * asin(x) / TAU; }
 double arccos(double x) { return 360 * acos(x) / TAU; }
 
