@@ -12,10 +12,12 @@ typedef struct {
 	enum event_type type;
 } event;
 
+/* Fix. */
 event make_event(time_t stamp, enum event_type type) {
 	event e = {stamp, type};
 	return e;
 }
+
 
 int generate_events(double lat, double lon, time_t now, event** events) {
 	int n = 20 * 365;
@@ -29,15 +31,18 @@ int generate_events(double lat, double lon, time_t now, event** events) {
 }
 
 
+/********************** UI *********************/
 int is_old(time_t stamp) {
 	return difftime(time(NULL), stamp) > 60;
 }
+
 
 void sleep_until(time_t t) {
 	double diff = difftime(t, time(NULL));
 	if (diff > 0)
 		sleep((time_t) diff);
 }
+
 
 void print_hours(event prev, event next) {
 	int hour;
@@ -56,6 +61,7 @@ void print_hours(event prev, event next) {
 	}
 }
 
+
 void print_events(event* events, int n_events) {
 	int k = 1;
 	event prev, next;
@@ -68,6 +74,7 @@ void print_events(event* events, int n_events) {
 		print_hours(prev, next);
 	}
 }
+
 
 int main(int argc, char** argv) {
 	double lat, lon;
