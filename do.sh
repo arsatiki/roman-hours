@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc -Wall -o sequence sequence.c
+gcc -Wall -lm -o sequence sequence.c
