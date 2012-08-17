@@ -74,7 +74,7 @@ void crossings(J2000_days t, double lat, double lon, event *rise, event *set) {
 	julian noon, transit;
 	noon = t + EXACT_EPOCH + lon / 360; 
 	
-	double M = fmod(357.5291 + 0.98560023 * (noon - 2451545), 360);
+	double M = fmod(357.5291 + 0.98560028 * (noon - 2451545), 360);
 	double C = 1.9148 * dsin(M) + 0.0200 * dsin(2*M) + 0.0003 * dsin(3*M);
 	double l = fmod(M + 102.9372 + C + 180, 360);
 	
