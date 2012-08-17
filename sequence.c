@@ -22,6 +22,35 @@ typedef struct {
 typedef long J2000_days;
 typedef double julian;
 
+const char* MESSAGES[24] = {
+	"Sunrise. I hour of day begins.\n",
+	"II hour of day begins.\n",
+	"III hour of day begins.\n",
+	"IV hour of day begins.\n",
+	"V hour of day begins.\n",
+	"VI hour of day begins.\n",
+	"Noon. VII hour of day begins.\n",
+	"VIII hour of day begins.\n",
+	"IX hour of day begins.\n",
+	"X hour of day begins.\n",
+	"XI hour of day begins.\n",
+	"XII hour of day begins.\n",
+
+	"Sunset. I hour of night begins. First watch.\n",
+	"II hour of night begins.\n",
+	"III hour of night begins.\n",
+	"IV hour of night begins. Second watch.\n",
+	"V hour of night begins.\n",
+	"VI hour of night begins.\n",
+	"Midnight. VII hour of night begins. Third watch.\n",
+	"VIII hour of night begins.\n",
+	"IX hour of night begins.\n",
+	"X hour of night begins. Fourth watch.\n",
+	"XI hour of night begins.\n",
+	"XII hour of night begins.\n",
+};
+
+
 /* Fix. */
 event make_event(time_t stamp, enum event_type type) {
 	event e = {stamp, type};
@@ -97,17 +126,16 @@ void sleep_until(time_t t) {
 
 void print_hours(event prev, event next) {
 	int hour;
-	double hourlen = difftime(next.stamp, prev.stamp) / HOURS;
-	char* type = (prev.type == SUNRISE)? "day": "night";
+	double len = difftime(next.stamp, prev.stamp) / HOURS;
 	time_t stamp;
 	
 	for (hour = 0; hour < HOURS; hour++) {
-		stamp = prev.stamp + (time_t)(hour * hourlen);
+		stamp = prev.stamp + (time_t)(hour * len);
 		if (is_old(stamp))
 			continue;
 
 		sleep_until(stamp);
-		printf("Hour %d (%s)\n", hour + 1, type); // Add more poesy.
+		puts(MESSAGES[hour + prev.type * HOURS]);
 		fflush(stdout);
 	}
 }
