@@ -27,7 +27,7 @@ const char* MESSAGES[24] = {
 	"The second hour of day begins.\n",
 	"The third hour of day begins.\n",
 	"The fourth hour of day begins.\n",
-	"the fifth hour of day begins.\n",
+	"The fifth hour of day begins.\n",
 	"The sixth hour of day begins.\n",
 	"Noon. The seventh hour of day begins.\n",
 	"The eight hour of day begins.\n",
