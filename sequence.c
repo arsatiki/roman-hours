@@ -9,6 +9,8 @@
 #define TAU (4*acos(0))
 #define HOURS (12)
 
+#define DEG (TAU/360.0)
+
 enum event_type {
 	SUNRISE,
 	SUNSET
@@ -65,22 +67,21 @@ time_t from_julian(julian jdn) {
 	return (time_t)((jdn - 2440587.5) * 86400);
 }
 
-double dsin(double x) { return sin(TAU*x/360); }
-double dcos(double x) { return cos(TAU*x/360); }
-
 void crossings(J2000_days t, double lat, double lon, event *rise, event *set) {
 	julian noon, transit;
 	noon = t + EXACT_EPOCH + lon / 360; 
 	
 	double M = fmod(357.5291 + 0.98560028 * (noon - EPOCH), 360);
-	double C = 1.9148 * dsin(M) + 0.0200 * dsin(2*M) + 0.0003 * dsin(3*M);
+	double C = 1.9148 * sin(M * DEG) 
+	         + 0.0200 * sin(2*M * DEG) 
+	         + 0.0003 * sin(3*M * DEG);
 	double l = fmod(M + 102.9372 + C + 180, 360);
 	
-	transit = noon + 0.0053 * dsin(M) - 0.0069 * dsin(2*l);
+	transit = noon + 0.0053 * sin(M * DEG) - 0.0069 * sin(2*l * DEG);
 	
-	double d_rad = asin(dsin(l) * dsin(23.45));
-	double num = dsin(-0.83) - dsin(lat) * sin(d_rad);
-	double den = dcos(lat) * cos(d_rad);
+	double d_rad = asin(sin(l * DEG) * sin(23.45 * DEG));
+	double num = sin(-0.83 * DEG) - sin(lat * DEG) * sin(d_rad);
+	double den = cos(lat * DEG) * cos(d_rad);
 	double w_rad = acos(num/den);
 
 	*rise = make_event(from_julian(transit - w_rad/TAU), SUNRISE);
