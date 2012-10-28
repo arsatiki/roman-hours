@@ -67,8 +67,6 @@ time_t from_julian(julian jdn) {
 
 double dsin(double x) { return sin(TAU*x/360); }
 double dcos(double x) { return cos(TAU*x/360); }
-double arcsin(double x) { return 360 * asin(x) / TAU; }
-double arccos(double x) { return 360 * acos(x) / TAU; }
 
 void crossings(J2000_days t, double lat, double lon, event *rise, event *set) {
 	julian noon, transit;
@@ -80,13 +78,13 @@ void crossings(J2000_days t, double lat, double lon, event *rise, event *set) {
 	
 	transit = noon + 0.0053 * dsin(M) - 0.0069 * sin(2*l);
 	
-	double d = arcsin(dsin(l) * dsin(23.45));
-	double num = dsin(-0.83) - dsin(lat) * dsin(d);
-	double den = dcos(lat) * dcos(d);
-	double w = arccos(num/den);
+	double d = asin(dsin(l) * dsin(23.45));
+	double num = dsin(-0.83) - dsin(lat) * sin(d);
+	double den = dcos(lat) * cos(d);
+	double w = acos(num/den);
 
-	*rise = make_event(from_julian(transit - w/360), SUNRISE);
-	*set  = make_event(from_julian(transit + w/360), SUNSET);
+	*rise = make_event(from_julian(transit - w/TAU), SUNRISE);
+	*set  = make_event(from_julian(transit + w/TAU), SUNSET);
 }
 
 
