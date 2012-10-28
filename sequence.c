@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <math.h>
 
-#define EXACT_EPOCH (2451545.009)
+#define EXACT_EPOCH (2451545.0009)
 #define EPOCH (2451545)
 #define TAU (4*acos(0))
 #define HOURS (12)
