@@ -78,13 +78,13 @@ void crossings(J2000_days t, double lat, double lon, event *rise, event *set) {
 	
 	transit = noon + 0.0053 * dsin(M) - 0.0069 * dsin(2*l);
 	
-	double d = asin(dsin(l) * dsin(23.45));
-	double num = dsin(-0.83) - dsin(lat) * sin(d);
-	double den = dcos(lat) * cos(d);
-	double w = acos(num/den);
+	double d_rad = asin(dsin(l) * dsin(23.45));
+	double num = dsin(-0.83) - dsin(lat) * sin(d_rad);
+	double den = dcos(lat) * cos(d_rad);
+	double w_rad = acos(num/den);
 
-	*rise = make_event(from_julian(transit - w/TAU), SUNRISE);
-	*set  = make_event(from_julian(transit + w/TAU), SUNSET);
+	*rise = make_event(from_julian(transit - w_rad/TAU), SUNRISE);
+	*set  = make_event(from_julian(transit + w_rad/TAU), SUNSET);
 }
 
 
