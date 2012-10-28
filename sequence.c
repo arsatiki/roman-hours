@@ -76,7 +76,7 @@ void crossings(J2000_days t, double lat, double lon, event *rise, event *set) {
 	double C = 1.9148 * dsin(M) + 0.0200 * dsin(2*M) + 0.0003 * dsin(3*M);
 	double l = fmod(M + 102.9372 + C + 180, 360);
 	
-	transit = noon + 0.0053 * dsin(M) - 0.0069 * sin(2*l);
+	transit = noon + 0.0053 * dsin(M) - 0.0069 * dsin(2*l);
 	
 	double d = asin(dsin(l) * dsin(23.45));
 	double num = dsin(-0.83) - dsin(lat) * sin(d);
